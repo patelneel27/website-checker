@@ -1,26 +1,334 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-brand: #1362fb;
+  --color-brand-deep: #1433d6;
+  --color-navy: #0a1342;
+  --color-sky: #5c9bff;
+  --color-ink: #3a4670;
+  --color-mist: #eef3ff;
+  --color-line: #dce3f5;
+  --color-good: #0cce6b;
+  --color-good-text: #067a3e;
+  --color-average: #ffa400;
+  --color-average-text: #a35400;
+  --color-poor: #ff4e42;
+  --color-poor-text: #c4140a;
+  --color-coal: #16181d;
+  --color-stone: #4a4f5c;
+  --color-paper: #f1f1ee;
+  --color-tray: #e4e4e0;
+
+  --font-sans: var(--font-jakarta), "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-sora), var(--font-jakarta), system-ui, sans-serif;
+  --font-poster: var(--font-anton), "Arial Narrow", sans-serif;
+
+  --text-base: 1.125rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html,
+  body {
+    height: 100%;
+    background: #ffffff;
+    color: var(--color-ink);
+    /* Kiosk: no rubber-band scrolling, double-tap zoom or long-press callouts. */
+    overscroll-behavior: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  body {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+  }
+  input,
+  textarea {
+    user-select: text;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    color: var(--color-navy);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-sky);
+    outline-offset: 3px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .eyebrow {
+    @apply text-base font-bold tracking-[0.14em] text-brand uppercase;
+  }
+  .display {
+    @apply font-display font-extrabold tracking-[-0.035em];
+  }
+  /* Legacy class names kept for the staff panel and dialogs. */
+  .btn-primary {
+    @apply inline-flex min-h-16 items-center justify-center gap-3 rounded-full bg-brand px-8 text-xl font-bold text-white transition active:scale-[0.98] active:bg-brand-deep disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-secondary {
+    @apply inline-flex min-h-14 items-center justify-center gap-2 rounded-full border-[1.5px] border-navy/15 bg-transparent px-6 text-lg font-semibold text-navy transition active:scale-[0.98] active:bg-mist;
+  }
+  .btn-ghost-light {
+    @apply inline-flex min-h-14 items-center justify-center gap-2 rounded-full border-[1.5px] border-white/25 px-6 text-lg font-semibold text-white transition active:scale-[0.98] active:bg-white/10;
+  }
+  .field {
+    @apply min-h-16 w-full rounded-2xl border-2 border-black/[0.06] bg-white px-5 text-xl text-coal shadow-[inset_0_2px_3px_rgba(0,0,0,0.05)] transition outline-none placeholder:text-stone/45 focus:border-brand focus:shadow-[0_0_0_4px_rgba(19,98,251,0.15)];
+  }
+  .bottom-bar {
+    @apply fixed inset-x-0 bottom-0 z-10 border-t border-line bg-white/95 px-8 py-5 backdrop-blur;
+  }
+  /* Sticky action bar on the paper screens. */
+  .paper-bar {
+    @apply fixed inset-x-0 bottom-0 z-10 border-t border-black/5 bg-paper/90 px-8 py-4 backdrop-blur-md;
+  }
+}
+
+.grid-lines {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* Warm paper background with a fine grain (welcome hero). */
+.paper {
+  background-color: #f1f1ee;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Glossy "3D" object surface. */
+.glossy {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -2px 6px rgba(10, 19, 66, 0.12),
+    0 24px 40px -14px rgba(10, 19, 66, 0.38),
+    0 6px 12px -4px rgba(10, 19, 66, 0.18);
+}
+
+/* Tactile CTA: lifts on hover, sinks on press, with a light sheen that sweeps across.
+   Hover rules only apply to real pointers, so a tap on the tablet never "sticks". */
+.tactile {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 10px 20px -8px rgba(0, 0, 0, 0.5);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tactile-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.16) 48%, rgba(255, 255, 255, 0.04) 56%, transparent 65%);
+  transform: translateX(-110%);
+  animation: tactile-sheen 6s cubic-bezier(0.45, 0, 0.2, 1) 2.5s infinite;
+}
+.tactile-corner {
+  transform-origin: top right;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tactile-corner-arrow {
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tactile-label {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tactile-arrow {
+  display: inline-block;
+  width: 0;
+  opacity: 0;
+  transform: translateX(-0.75rem);
+  overflow: hidden;
+  transition:
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .tactile:not(:disabled):hover {
+    transform: translateY(-3px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      0 22px 32px -12px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(19, 98, 251, 0.25);
+  }
+  .tactile:not(:disabled):hover .tactile-sheen {
+    animation: tactile-sheen-once 0.8s cubic-bezier(0.45, 0, 0.2, 1) 1 forwards;
+  }
+  .tactile:not(:disabled):hover .tactile-corner {
+    transform: scale(1.55);
+  }
+  .tactile:not(:disabled):hover .tactile-corner-arrow {
+    transform: translate(2px, -2px) rotate(45deg);
+  }
+  .tactile:not(:disabled):hover .tactile-arrow {
+    width: 2.4rem;
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .tactile:not(:disabled):hover .tactile-label {
+    transform: translateX(-0.25rem);
+  }
+}
+
+.tactile:not(:disabled):active {
+  transform: translateY(2px) scale(0.995);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 3px 8px rgba(0, 0, 0, 0.35),
+    0 3px 8px -6px rgba(0, 0, 0, 0.5);
+  transition-duration: 0.08s;
+}
+.tactile:not(:disabled):active .tactile-corner {
+  transform: scale(1.25);
+}
+.tactile:focus-visible {
+  outline: 3px solid #4d94ff;
+  outline-offset: 4px;
+}
+
+.tactile:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  box-shadow: none;
+}
+.tactile:disabled .tactile-sheen {
+  animation: none;
+}
+
+/* Secondary pill (Back, Close, Start again). */
+.pill {
+  display: inline-flex;
+  white-space: nowrap;
+  min-height: 3.5rem;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(#ffffff, #f6f6f3);
+  padding: 0 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-coal);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 8px 16px -10px rgba(0, 0, 0, 0.3);
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pill-icon {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@media (hover: hover) {
+  .pill:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 1px 2px rgba(0, 0, 0, 0.06),
+      0 14px 22px -10px rgba(0, 0, 0, 0.32);
+  }
+  .pill:hover .pill-icon-left {
+    transform: translateX(-3px);
+  }
+  .pill:hover .pill-icon-right {
+    transform: translateX(3px);
+  }
+}
+.pill:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+  transition-duration: 0.08s;
+}
+
+/* Logo: the name catches the light every few seconds; the star spins once on hover. */
+.wordmark-shine {
+  --wm: var(--color-navy);
+  background-image: linear-gradient(100deg, var(--wm) 0%, var(--wm) 42%, #5c9bff 50%, var(--wm) 58%, var(--wm) 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: wordmark-shine 7s ease-in-out 1.4s infinite;
+}
+.wordmark-light {
+  --wm: #ffffff;
+}
+@keyframes wordmark-shine {
+  0% { background-position: 100% 0; }
+  20%, 100% { background-position: 0% 0; }
+}
+.logo-star {
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@media (hover: hover) {
+  .logo:hover .logo-star {
+    transform: rotate(360deg);
+  }
+}
+
+/* LetFlows pages use LetFlows' brick orange as the accent. */
+.theme-letflows {
+  --color-brand: #e4572e;
+  --color-brand-deep: #c4431e;
+}
+.theme-letflows .tactile-corner {
+  background-image: linear-gradient(to bottom left, #f6a283, #e4572e);
+}
+
+/* Event home choices: lift on hover, arrow slides; press sinks. */
+.choice {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.choice-arrow {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@media (hover: hover) {
+  .choice:hover {
+    transform: translateY(-4px);
+  }
+  .choice:hover .choice-arrow {
+    transform: translateX(4px) scale(1.06);
+  }
+}
+.choice:active {
+  transform: translateY(2px) scale(0.99);
+  transition-duration: 0.08s;
+}
+
+/* "Free · 60 sec" sticker: the stopwatch hand ticks round. */
+.stopwatch-hand {
+  transform-origin: 50% 50%;
+  animation: stopwatch-tick 6s steps(12) infinite;
+}
+@keyframes stopwatch-tick {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes tactile-sheen-once {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(110%); }
+}
+@keyframes tactile-sheen {
+  0% { transform: translateX(-110%); }
+  18%, 100% { transform: translateX(110%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tactile-sheen, .wordmark-shine, .stopwatch-hand { animation: none; }
+  .tactile, .tactile-corner, .tactile-corner-arrow, .tactile-label, .tactile-arrow, .pill, .pill-icon { transition: none; }
 }
