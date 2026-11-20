@@ -61,17 +61,17 @@ function Choice({
       animate={{ opacity: 1, y: 0, rotate: 0 }}
       transition={{ type: "spring", stiffness: 180, damping: 18, delay: 0.35 + index * 0.12 }}
     >
-      <Link href={href} className="choice glossy group block rounded-[2.2rem] bg-gradient-to-b from-white to-[#F6F6F4] p-7">
+      <Link href={href} className="choice glossy group block rounded-[2.2rem] bg-gradient-to-b from-white to-[#F6F6F4] p-6 sm:p-7">
         <div className="flex items-start justify-between gap-4">
-          {visual}
+          <div className="min-w-0 max-sm:[zoom:0.82]">{visual}</div>
           <span className="choice-arrow flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#2E313A] to-[#15171D] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_8px_16px_-8px_rgba(0,0,0,0.5)]">
             <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M5 12h14m-6-6 6 6-6 6" />
             </svg>
           </span>
         </div>
-        <h2 className="mt-6 font-poster text-[3.25rem] leading-none font-normal text-coal">{title}</h2>
-        <p className="mt-3 text-xl leading-snug text-stone">{text}</p>
+        <h2 className="mt-6 font-poster text-[2.75rem] leading-none font-normal text-coal sm:text-[3.25rem]">{title}</h2>
+        <p className="mt-3 text-lg leading-snug text-stone sm:text-xl">{text}</p>
         <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
           {meta.map((m) => (
             <li key={m} className="flex items-center gap-2 text-base font-semibold text-coal">
@@ -90,16 +90,16 @@ export function EventHome({ eventName, demoUrl }: { eventName: string; demoUrl: 
 
   return (
     <main className="paper flex h-dvh flex-col overflow-y-auto">
-      <header className="flex items-center justify-between gap-4 px-6 pt-8 sm:px-8 sm:pt-9">
+      <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 px-6 pt-8 sm:px-8 sm:pt-9">
         <Logo intro onLongPress={() => setStaffOpen(true)} />
-        <span className="rounded-full bg-white/70 px-4 py-2 text-sm font-bold tracking-[0.12em] text-coal uppercase shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
+        <span className="rounded-full bg-white/70 px-4 py-2 text-xs font-bold tracking-[0.12em] text-coal uppercase shadow-[0_1px_2px_rgba(0,0,0,0.06)] sm:text-sm">
           {eventName}
         </span>
       </header>
 
       <section className="px-6 pt-12 sm:px-8">
         <p className="eyebrow">Welcome to the Sterlixit stand</p>
-        <h1 className="mt-4 font-poster text-[clamp(4.5rem,15vw,8.5rem)] leading-[0.88] font-normal text-coal">
+        <h1 className="mt-4 font-poster text-[clamp(3.5rem,15vw,8.5rem)] leading-[0.88] font-normal text-coal">
           <span className="block">
             <LetterRise text="What can we" />
           </span>
@@ -173,7 +173,7 @@ export function EventHome({ eventName, demoUrl }: { eventName: string; demoUrl: 
         />
       </section>
 
-      <footer className="mt-auto flex items-center justify-between gap-4 border-t border-black/10 px-6 py-6 text-base text-stone sm:px-8">
+      <footer className="mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-black/10 px-6 py-6 text-base text-stone sm:px-8">
         <span>
           <strong className="text-coal">Sterlixit</strong> · web, branding and software
         </span>

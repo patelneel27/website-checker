@@ -60,7 +60,7 @@ export function Thanks({
           initial={{ scale: 0, rotate: -40 }}
           animate={{ scale: 1, rotate: -8 }}
           transition={{ type: "spring", stiffness: 240, damping: 14, delay: 0.1 }}
-          className="absolute top-0 right-2"
+          className="absolute top-0 right-0 max-sm:[zoom:0.7] sm:right-2"
           aria-hidden="true"
         >
           <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}>
@@ -77,7 +77,7 @@ export function Thanks({
             {THANKS.headline[1]}
           </motion.span>
         </h1>
-        <p className="mt-7 max-w-2xl text-2xl leading-snug text-stone">{THANKS.text}</p>
+        <p className="mt-6 max-w-2xl text-lg leading-snug text-stone sm:mt-7 sm:text-2xl">{THANKS.text}</p>
         {queued && (
           <p className="mt-4 flex items-center gap-3 text-lg font-semibold text-coal">
             <span className="h-3 w-3 shrink-0 animate-pulse rounded-full bg-average" />
@@ -88,12 +88,12 @@ export function Thanks({
 
       <section className="mt-auto pt-14">
         <p className="eyebrow">Next step</p>
-        <h2 className="mt-3 font-poster text-6xl leading-none font-normal text-coal">
+        <h2 className="mt-3 font-poster text-5xl leading-none font-normal text-coal sm:text-6xl">
           {THANKS.qrTitle.split(" ").slice(0, -1).join(" ")} <span className="text-brand">{THANKS.qrTitle.split(" ").slice(-1)}</span>
         </h2>
-        <div className="mt-8 grid grid-cols-[auto_1fr] items-center gap-8">
+        <div className="mt-8 grid items-center gap-6 sm:grid-cols-[auto_1fr] sm:gap-8">
           <motion.div
-            className="glossy rounded-[1.8rem] bg-white p-5"
+            className="glossy justify-self-center rounded-[1.8rem] bg-white p-5"
             initial={{ opacity: 0, y: 30, rotate: 6 }}
             animate={{ opacity: 1, y: 0, rotate: -3 }}
             transition={{ type: "spring", stiffness: 180, damping: 16, delay: 0.35 }}
@@ -101,7 +101,7 @@ export function Thanks({
             <QRCodeSVG value={bookingQrUrl} size={170} fgColor="#16181D" level="M" marginSize={0} />
             <p className="mt-3 text-center text-sm font-bold tracking-[0.12em] text-stone uppercase">Scan with your phone</p>
           </motion.div>
-          <p className="text-xl leading-snug text-coal">{THANKS.qrText}</p>
+          <p className="text-lg leading-snug text-coal sm:text-xl">{THANKS.qrText}</p>
         </div>
         <TactileButton href={bookingButtonUrl} className="mt-10">
           Or book on this screen

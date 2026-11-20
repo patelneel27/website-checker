@@ -44,16 +44,16 @@ export function SeoGlance({ seo, site, url }: { seo: SeoDetails; site: SiteInfo;
   const facts = seoFacts(seo);
 
   return (
-    <section className="pt-16">
-      <div className="px-8">
+    <section className="pt-14 sm:pt-16">
+      <div className="px-6 sm:px-8">
         <p className="eyebrow">SEO at a glance</p>
-        <h2 className="mt-3 font-poster text-6xl leading-none font-normal text-coal">
+        <h2 className="mt-3 font-poster text-5xl leading-none font-normal text-coal sm:text-6xl">
           What Google <span className="text-brand">&amp; social media see</span>
         </h2>
       </div>
 
       {/* Previews sit on a tinted stage so the mock UIs read as "real". */}
-      <div className="mt-8 grid gap-10 bg-black/[0.035] px-8 py-10 shadow-[inset_0_2px_8px_rgba(0,0,0,0.05)] lg:grid-cols-2">
+      <div className="mt-8 grid gap-10 bg-black/[0.035] [&>*]:min-w-0 px-6 py-8 sm:px-8 sm:py-10 shadow-[inset_0_2px_8px_rgba(0,0,0,0.05)] lg:grid-cols-2">
         <div>
           <SubHeading title="On Google" subtitle="Your search result on a phone" />
           <div className="mt-5 glossy rounded-[1.4rem] bg-white p-5 font-[Arial,sans-serif]">
@@ -66,7 +66,7 @@ export function SeoGlance({ seo, site, url }: { seo: SeoDetails; site: SiteInfo;
                 <span className="block truncate text-base text-[#4D5156]">{breadcrumb}</span>
               </span>
             </div>
-            <p className="mt-2 text-xl leading-snug text-[#1A0DAB]">{seo.title ? cut(seo.title, 60) : <em>No page title</em>}</p>
+            <p className="mt-2 text-lg leading-snug text-[#1A0DAB] sm:text-xl">{seo.title ? cut(seo.title, 60) : <em>No page title</em>}</p>
             <p className="mt-1 text-base leading-relaxed text-[#4D5156]">
               {seo.description ? cut(seo.description, 160) : <em>No description: Google will pick some text from your page.</em>}
             </p>
@@ -104,7 +104,7 @@ export function SeoGlance({ seo, site, url }: { seo: SeoDetails; site: SiteInfo;
         </div>
       </div>
 
-      <div className="mt-10 grid gap-10 px-8 lg:grid-cols-[1fr_2fr]">
+      <div className="mt-10 grid gap-10 px-6 sm:px-8 lg:grid-cols-[1fr_2fr] [&>*]:min-w-0">
         <div>
           <SubHeading title="Structured data" subtitle="Schema unlocks rich results: address, reviews, FAQs, breadcrumbs" />
           {seo.schema.types.length > 0 ? (
@@ -138,7 +138,7 @@ export function SeoGlance({ seo, site, url }: { seo: SeoDetails; site: SiteInfo;
                 <span className={`mt-2 h-2.5 w-2.5 shrink-0 rounded-full ${DOT[f.status]}`} aria-hidden="true" />
                 <div className="min-w-0">
                   <dt className="text-base text-stone">{f.label}</dt>
-                  <dd className="text-lg font-bold text-coal">{f.value}</dd>
+                  <dd className="text-base font-bold break-words text-coal sm:text-lg">{f.value}</dd>
                   {f.note && <dd className="truncate text-base text-stone">{f.note}</dd>}
                 </div>
               </div>

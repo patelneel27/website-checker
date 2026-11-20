@@ -61,16 +61,16 @@ export function Scanning({ url, ready, fast, onDone }: { url: string; ready: boo
   const site = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
   return (
-    <div className="paper flex h-full flex-col px-8 py-9" aria-live="polite">
+    <div className="paper flex h-full flex-col overflow-y-auto px-6 py-7 sm:px-8 sm:py-9" aria-live="polite">
       <Logo />
 
-      <div className="mt-12">
+      <div className="mt-8 sm:mt-12">
         <BrowserBar state={finished ? "idle" : "busy"}>
-          <span className="truncate font-display text-3xl font-bold tracking-tight text-coal">{site}</span>
+          <span className="truncate font-display text-2xl font-bold tracking-tight text-coal sm:text-3xl">{site}</span>
         </BrowserBar>
       </div>
 
-      <div className="mt-10 flex items-end justify-between gap-6">
+      <div className="mt-8 flex items-end justify-between gap-4 sm:mt-10 sm:gap-6">
         <div>
           <AnimatePresence mode="wait">
             <motion.p
@@ -90,7 +90,7 @@ export function Scanning({ url, ready, fast, onDone }: { url: string; ready: boo
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.3 }}
-              className="mt-3 font-poster text-6xl leading-none font-normal text-coal"
+              className="mt-3 font-poster text-4xl leading-none font-normal text-coal sm:text-6xl"
             >
               {finished ? (
                 <>
@@ -102,9 +102,9 @@ export function Scanning({ url, ready, fast, onDone }: { url: string; ready: boo
             </motion.h1>
           </AnimatePresence>
         </div>
-        <p className="font-poster text-[8rem] leading-[0.8] font-normal text-coal tabular-nums">
+        <p className="shrink-0 font-poster text-[5rem] leading-[0.8] font-normal text-coal tabular-nums sm:text-[8rem]">
           <motion.span>{shown}</motion.span>
-          <span className="text-6xl text-brand">%</span>
+          <span className="text-4xl text-brand sm:text-6xl">%</span>
         </p>
       </div>
 
@@ -116,7 +116,7 @@ export function Scanning({ url, ready, fast, onDone }: { url: string; ready: boo
       </div>
 
       {/* The eight checks as glossy tiles: waiting (faded), running (lifted, pulsing), done (tick). */}
-      <ul className="my-auto grid grid-cols-4 gap-x-4 gap-y-12 py-10">
+      <ul className="my-auto grid grid-cols-4 gap-x-2 gap-y-8 py-8 sm:gap-x-4 sm:gap-y-12 sm:py-10">
         {STEPS.map((step, i) => {
           const state = i < done ? "done" : i === done ? "running" : "waiting";
           return (
@@ -144,7 +144,9 @@ export function Scanning({ url, ready, fast, onDone }: { url: string; ready: boo
                     aria-hidden="true"
                   />
                 )}
-                <AreaIcon icon={step.icon} size={104} />
+                <span className="block max-sm:[zoom:0.6]">
+                  <AreaIcon icon={step.icon} size={104} />
+                </span>
                 <AnimatePresence>
                   {state === "done" && (
                     <motion.span
@@ -158,11 +160,11 @@ export function Scanning({ url, ready, fast, onDone }: { url: string; ready: boo
                   )}
                 </AnimatePresence>
               </motion.div>
-              <p className={`mt-5 text-xl leading-tight font-bold transition-colors ${state === "waiting" ? "text-stone/45" : "text-coal"}`}>
+              <p className={`mt-3 text-sm leading-tight font-bold transition-colors sm:mt-5 sm:text-xl ${state === "waiting" ? "text-stone/45" : "text-coal"}`}>
                 {step.title}
               </p>
               <p
-                className={`mt-1 text-base font-semibold ${
+                className={`mt-1 text-xs font-semibold sm:text-base ${
                   state === "done" ? "text-good-text" : state === "running" ? "text-brand" : "text-stone/40"
                 }`}
               >
@@ -173,7 +175,7 @@ export function Scanning({ url, ready, fast, onDone }: { url: string; ready: boo
         })}
       </ul>
 
-      <p className="pt-6 text-center text-lg text-stone">
+      <p className="pt-6 text-center text-base text-stone sm:text-lg">
         {waitingOnGoogle
           ? "Google’s Lighthouse test is running on a simulated phone. Nearly there…"
           : "We only look at your public homepage. Nothing is changed."}

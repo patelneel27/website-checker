@@ -64,7 +64,7 @@ export function LiveScreen({ greeting, place, tiles, events, wallpaper }: { gree
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-3">
+      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {state.map((t) => (
           <motion.div
             key={t.id}
@@ -75,7 +75,7 @@ export function LiveScreen({ greeting, place, tiles, events, wallpaper }: { gree
                 : { scale: 1 }
             }
             transition={{ duration: 0.7 }}
-            className={`flex min-h-[7.5rem] flex-col justify-between rounded-[1.2rem] p-3.5 transition-colors duration-500 ${
+            className={`flex min-h-[7.5rem] min-w-0 flex-col justify-between rounded-[1.2rem] p-3.5 transition-colors duration-500 ${
               t.on ? "bg-white/95 text-coal" : "bg-white/12 text-white backdrop-blur-md"
             }`}
           >
@@ -108,7 +108,7 @@ export function LiveScreen({ greeting, place, tiles, events, wallpaper }: { gree
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -10, opacity: 0, transition: { duration: 0.15 } }}
               transition={{ type: "spring", stiffness: 320, damping: 26 }}
-              className="flex items-center gap-2.5 rounded-full bg-black/70 py-2 pr-4 pl-2 text-sm font-semibold text-white shadow-lg backdrop-blur-md"
+              className="flex items-center gap-2.5 rounded-full bg-black/70 py-2 pr-4 pl-2 text-[13px] leading-tight font-semibold text-white shadow-lg backdrop-blur-md sm:text-sm"
             >
               <CheckBadge size="sm" />
               {toast.text}

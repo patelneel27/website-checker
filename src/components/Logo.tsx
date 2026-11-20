@@ -57,7 +57,7 @@ export function Logo({
 
   return (
     <div
-      className={`logo inline-flex select-none items-center gap-3 ${onTap ? "cursor-pointer" : ""}`}
+      className={`logo inline-flex shrink-0 select-none items-center gap-3 ${size === "md" ? "max-sm:[zoom:0.86]" : ""} ${onTap ? "cursor-pointer" : ""}`}
       onPointerDown={() => {
         cancel();
         timer.current = setTimeout(() => {

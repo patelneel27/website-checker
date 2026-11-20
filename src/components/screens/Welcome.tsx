@@ -26,39 +26,41 @@ export function Welcome({ onStart, onLongPressLogo }: { onStart: () => void; onL
 
   return (
     <div className="paper flex h-full flex-col">
-      <div className="flex-1 overflow-y-auto pb-32">
-        <header className="flex items-center justify-between gap-4 px-8 pt-9">
+      <div className="flex-1 overflow-x-hidden overflow-y-auto pb-32">
+        <header className="flex items-center justify-between gap-3 px-6 pt-7 sm:gap-4 sm:px-8 sm:pt-9">
           <Logo intro onLongPress={onLongPressLogo} />
-          <FreeSticker />
+          <div className="shrink-0 max-sm:[zoom:0.72]">
+            <FreeSticker />
+          </div>
         </header>
 
         <PlayfulHero ref={heroCta} onStart={onStart} />
 
         {/* What we check */}
-        <section className="px-8 pt-12">
-          <div className="flex items-end justify-between gap-6">
+        <section className="px-6 pt-12 sm:px-8">
+          <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <div>
               <p className="eyebrow">What we check</p>
-              <h2 className="display mt-3 text-4xl leading-tight">Eight areas. One quick scan.</h2>
+              <h2 className="display mt-3 text-3xl leading-tight sm:text-4xl">Eight areas. One quick scan.</h2>
             </div>
             <PillButton icon="arrow" onClick={() => setSheet({ open: true })} className="shrink-0">
               Full details
             </PillButton>
           </div>
 
-          <ul className="mt-8 grid grid-cols-2 gap-x-10 border-t border-line">
+          <ul className="mt-8 grid border-t border-line sm:grid-cols-2 sm:gap-x-10">
             {CHECK_AREAS.map((area, i) => (
               <li key={area.id} className="border-b border-line">
                 <button
                   type="button"
                   onClick={() => setSheet({ open: true, focus: area.id })}
-                  className="group flex w-full items-start gap-4 py-5 text-left"
+                  className="group flex w-full items-start gap-4 py-4 text-left sm:py-5"
                 >
                   <span className="font-poster text-2xl leading-none text-brand tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block text-xl font-bold text-navy">{area.title}</span>
+                    <span className="block text-lg font-bold text-navy sm:text-xl">{area.title}</span>
                     <span className="mt-0.5 block text-base leading-snug text-ink">{area.short}</span>
                   </span>
                   <span className="pt-0.5 text-xl text-navy/30 transition group-active:translate-x-1 group-active:text-brand" aria-hidden="true">
@@ -129,8 +131,8 @@ function ExampleStrip() {
   const ex = EXAMPLES[i];
 
   return (
-    <section className="mt-14 bg-white/70 px-8 py-12">
-      <div className="flex items-baseline justify-between gap-4">
+    <section className="mt-14 bg-white/70 px-6 py-10 sm:px-8 sm:py-12">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
         <p className="eyebrow">Example result</p>
         <AnimatePresence mode="wait">
           <motion.p
@@ -138,25 +140,25 @@ function ExampleStrip() {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
-            className="text-xl font-bold text-navy"
+            className="text-lg font-bold text-navy sm:text-xl"
           >
             {ex.summary}
           </motion.p>
         </AnimatePresence>
       </div>
-      <div className="mt-8 grid grid-cols-4 divide-x divide-navy/10">
+      <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 sm:gap-0 sm:divide-x sm:divide-navy/10">
         {CATEGORY_ORDER.map((k, idx) => {
           const v = ex.scores[idx];
           const c = BAND_COLOURS[bandFor(v)];
           return (
-            <div key={k} className="px-5 first:pl-0 last:pr-0">
+            <div key={k} className="sm:px-5 sm:first:pl-0 sm:last:pr-0">
               <AnimatePresence mode="wait">
                 <motion.p
                   key={v}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="display text-6xl tabular-nums"
+                  className="display text-5xl tabular-nums sm:text-6xl"
                   style={{ color: c.text }}
                 >
                   {v}
@@ -169,7 +171,7 @@ function ExampleStrip() {
                   transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
                 />
               </div>
-              <p className="mt-3 text-lg font-semibold text-navy">{CATEGORY_LABELS[k]}</p>
+              <p className="mt-3 text-base font-semibold text-navy sm:text-lg">{CATEGORY_LABELS[k]}</p>
             </div>
           );
         })}

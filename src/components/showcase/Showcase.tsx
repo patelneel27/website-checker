@@ -46,7 +46,8 @@ export function Showcase({
         <header className="flex items-center justify-between gap-4 px-6 pt-8 sm:px-8 sm:pt-9">
           <Logo onTap={onHome} onLongPress={onLongPressLogo} />
           <PillButton icon="arrow" onClick={onDone}>
-            Skip to my results
+            <span className="sm:hidden">Skip</span>
+            <span className="max-sm:hidden">Skip to my results</span>
           </PillButton>
         </header>
 

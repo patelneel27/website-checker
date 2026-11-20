@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- small local SVG */
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CheckBadge } from "../Buttons";
 import { ScaledStage } from "../ScaledStage";
 
@@ -26,7 +26,10 @@ const EARLIER = [
 type Phase = 0 | 1 | 2 | 3;
 const TIMES: Record<Phase, number> = { 0: 900, 1: 900, 2: 1100, 3: 1900 };
 
-const PATH = "M 250 205 C 330 120, 420 120, 470 170";
+// Two layouts: side by side on a tablet, stacked on a phone (point and phone on top, the
+// attendance list underneath) so the scene stays big enough to read.
+const WIDE = { w: 752, h: 400, path: "M 250 205 C 330 120, 420 120, 470 170", list: "top-[1.5rem] right-0", point: "top-[3.5rem]", phone: "top-[5.5rem]" };
+const NARROW = { w: 400, h: 610, path: "M 250 190 C 330 260, 300 320, 210 380", list: "top-[19rem] left-[3.25rem]", point: "top-[1rem]", phone: "top-[3rem]" };
 
 function Avatar({ initials, hue, size = 40 }: { initials: string; hue: number; size?: number }) {
   return (
@@ -47,7 +50,25 @@ function NfcIcon({ className = "" }: { className?: string }) {
   );
 }
 
+function useNarrow() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [narrow, setNarrow] = useState(false);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const check = (w: number) => setNarrow(w < 560);
+    check(el.getBoundingClientRect().width);
+    const ro = new ResizeObserver(([e]) => check(e.contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  return [ref, narrow] as const;
+}
+
 export function ClockInScene() {
+  const [wrap, narrow] = useNarrow();
+  const L = narrow ? NARROW : WIDE;
+  const PATH = L.path;
   const [phase, setPhase] = useState<Phase>(0);
   const [n, setN] = useState(0);
   const [rows, setRows] = useState<{ key: string; name: string; initials: string; hue: number; time: string; method: string }[]>(
@@ -72,9 +93,10 @@ export function ClockInScene() {
   const inCount = 10 + Math.min(n, 3) + (phase === 3 ? 1 : 0);
 
   return (
-    <ScaledStage width={752} height={400}>
+    <div ref={wrap}>
+    <ScaledStage key={narrow ? "n" : "w"} width={L.w} height={L.h}>
       {/* The clock-in point by the door */}
-      <div className="absolute top-[3.5rem] left-[1rem] flex h-[17rem] w-[11rem] flex-col items-center justify-between rounded-[1.8rem] bg-gradient-to-b from-[#2E313A] to-[#15171D] p-5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_30px_40px_-20px_rgba(0,0,0,0.6)]">
+      <div className={`absolute ${L.point} left-[1rem] flex h-[17rem] w-[11rem] flex-col items-center justify-between rounded-[1.8rem] bg-gradient-to-b from-[#2E313A] to-[#15171D] p-5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_30px_40px_-20px_rgba(0,0,0,0.6)]`}>
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white">
           <img src="/staffmain/icon.svg" alt="" className="h-8 w-8" />
         </span>
@@ -98,7 +120,7 @@ export function ClockInScene() {
 
       {/* The phone */}
       <motion.div
-        className="absolute top-[5.5rem] left-[10.5rem] z-20 h-[15rem] w-[7.6rem] rounded-[1.6rem] bg-[#0E1018] p-1.5 shadow-[0_30px_40px_-18px_rgba(0,0,0,0.55)]"
+        className={`absolute ${L.phone} left-[10.5rem] z-20 h-[15rem] w-[7.6rem] rounded-[1.6rem] bg-[#0E1018] p-1.5 shadow-[0_30px_40px_-18px_rgba(0,0,0,0.55)]`}
         animate={{ x: tapped ? -64 : 30, rotate: tapped ? -10 : 4, y: tapped ? 6 : 0 }}
         transition={{ type: "spring", stiffness: 160, damping: 16 }}
       >
@@ -126,7 +148,7 @@ export function ClockInScene() {
       </motion.div>
 
       {/* The record travelling to StaffMain */}
-      <svg className="absolute inset-0 z-10 h-full w-full overflow-visible" viewBox="0 0 752 400" aria-hidden="true">
+      <svg className="absolute inset-0 z-10 h-full w-full overflow-visible" viewBox={`0 0 ${L.w} ${L.h}`} aria-hidden="true">
         <path d={PATH} fill="none" stroke="#16181D" strokeOpacity="0.18" strokeWidth="3" strokeDasharray="2 9" strokeLinecap="round" />
       </svg>
       <AnimatePresence>
@@ -146,7 +168,7 @@ export function ClockInScene() {
       </AnimatePresence>
 
       {/* Attendance in StaffMain */}
-      <div className="glossy absolute top-[1.5rem] right-0 w-[18.5rem] rounded-[1.6rem] bg-white p-4">
+      <div className={`glossy absolute ${L.list} w-[18.5rem] rounded-[1.6rem] bg-white p-4`}>
         <div className="flex items-center justify-between">
           <div className="leading-tight">
             <p className="text-sm font-semibold text-stone">Attendance · today</p>
@@ -184,6 +206,7 @@ export function ClockInScene() {
         </p>
       </div>
     </ScaledStage>
+    </div>
   );
 }
 
@@ -192,10 +215,10 @@ export function ClockInSection() {
   return (
     <section className="mx-auto max-w-[47rem] border-t border-black/10 pt-12 pb-4">
       <p className="eyebrow">How clocking in works</p>
-      <h2 className="mt-4 font-poster text-[clamp(3.5rem,11vw,5.5rem)] leading-[0.92] font-normal text-coal">
+      <h2 className="mt-4 font-poster text-[clamp(3.25rem,11vw,5.5rem)] leading-[0.92] font-normal text-coal">
         Tap. Clocked in. <span className="text-brand">Stored.</span>
       </h2>
-      <p className="mt-4 max-w-2xl text-xl leading-snug text-stone">
+      <p className="mt-4 max-w-2xl text-lg leading-snug text-stone sm:text-xl">
         Staff tap their phone on the StaffMain point by the door, or scan its QR code, or clock in by location. The time, place and
         method go straight onto their attendance record, so you always know who&rsquo;s in.
       </p>

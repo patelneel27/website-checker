@@ -37,7 +37,7 @@ export function Results({
   return (
     <div className="paper flex h-full flex-col">
       <div className="flex-1 overflow-y-auto pb-40">
-        <header className="flex items-center justify-between gap-4 px-8 pt-9">
+        <header className="flex items-center justify-between gap-4 px-6 pt-7 sm:px-8 sm:pt-9">
           <Logo onLongPress={onLongPressLogo} />
           <PillButton icon="restart" onClick={onRestart}>
             Start again
@@ -45,10 +45,10 @@ export function Results({
         </header>
 
         {/* Site + summary */}
-        <section className="px-8 pt-12">
+        <section className="px-6 pt-10 sm:px-8 sm:pt-12">
           <p className="eyebrow">Step 2 of 3 · Your results</p>
           <motion.div
-            className="mt-6 flex items-center gap-5"
+            className="mt-6 flex items-center gap-4 sm:gap-5"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: EASE }}
@@ -62,13 +62,13 @@ export function Results({
               )}
             </span>
             <div className="min-w-0">
-              <p className="truncate text-2xl font-bold text-coal">{result.site.title ?? site}</p>
+              <p className="truncate text-xl font-bold text-coal sm:text-2xl">{result.site.title ?? site}</p>
               <p className="truncate text-lg font-semibold text-brand">{site}</p>
             </div>
           </motion.div>
 
           <motion.h1
-            className="mt-8 font-poster text-[5.75rem] leading-[0.92] font-normal text-coal"
+            className="mt-8 font-poster text-[clamp(2.75rem,12vw,5.75rem)] leading-[0.95] font-normal text-coal"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
@@ -77,7 +77,7 @@ export function Results({
           </motion.h1>
           {checkedEarlier && <p className="mt-6 text-base text-stone">{checkedEarlier}</p>}
           {pending && (
-            <p className="mt-5 flex items-center gap-3 text-lg font-semibold text-coal">
+            <p className="mt-5 flex items-center gap-3 text-base font-semibold text-coal sm:text-lg">
               <span className="relative flex h-3 w-3 shrink-0">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky opacity-75" />
                 <span className="relative inline-flex h-3 w-3 rounded-full bg-brand" />
@@ -89,11 +89,11 @@ export function Results({
 
         {/* Scores as glossy tiles, the same family as the welcome screen's objects */}
         {showRings && (
-          <section className="mt-10 grid grid-cols-4 gap-4 px-8" aria-label="Scores">
+          <section className="mt-10 grid grid-cols-2 gap-3 px-6 sm:grid-cols-4 sm:gap-4 sm:px-8" aria-label="Scores">
             {CATEGORY_ORDER.map((k, i) => (
               <motion.div
                 key={k}
-                className="glossy rounded-[1.8rem] bg-gradient-to-b from-white to-[#F5F6F8] px-3 pt-6 pb-5"
+                className="glossy rounded-[1.8rem] bg-gradient-to-b from-white to-[#F5F6F8] px-2 pt-5 pb-4 sm:px-3 sm:pt-6 sm:pb-5"
                 initial={{ opacity: 0, y: 40, scale: 0.9, rotate: i % 2 ? 4 : -4 }}
                 animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
                 transition={{ type: "spring", stiffness: 200, damping: 18, delay: 0.25 + i * 0.1 }}
@@ -112,9 +112,9 @@ export function Results({
 
         {/* Quick wins */}
         {result.quickWins.length > 0 && (
-          <section className="px-8 pt-16">
+          <section className="px-6 pt-14 sm:px-8 sm:pt-16">
             <p className="eyebrow">Quick wins</p>
-            <h2 className="mt-3 font-poster text-6xl leading-none font-normal text-coal">
+            <h2 className="mt-3 font-poster text-5xl leading-none font-normal text-coal sm:text-6xl">
               {result.quickWins.length === 1 ? "The one thing" : `${result.quickWins.length === 3 ? "Three" : "Two"} things`}{" "}
               <span className="text-brand">to fix first</span>
             </h2>
@@ -125,12 +125,12 @@ export function Results({
                   initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.7 + i * 0.15, ease: EASE }}
-                  className="grid grid-cols-[5.5rem_1fr] items-start border-b border-black/10 py-7"
+                  className="grid grid-cols-[3.5rem_1fr] items-start border-b border-black/10 py-6 sm:grid-cols-[5.5rem_1fr] sm:py-7"
                 >
-                  <span className="font-poster text-6xl leading-[0.85] text-brand tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-poster text-5xl leading-[0.85] text-brand tabular-nums sm:text-6xl">{String(i + 1).padStart(2, "0")}</span>
                   <div>
-                    <p className="text-2xl leading-snug font-bold text-coal">{w.title}</p>
-                    {w.fix && <p className="mt-1.5 text-lg leading-snug text-stone">{w.fix}</p>}
+                    <p className="text-xl leading-snug font-bold text-coal sm:text-2xl">{w.title}</p>
+                    {w.fix && <p className="mt-1.5 text-base leading-snug text-stone sm:text-lg">{w.fix}</p>}
                   </div>
                 </motion.li>
               ))}
@@ -142,13 +142,13 @@ export function Results({
 
         {/* Quick checks */}
         {result.checks.length > 0 && (
-          <section className="px-8 pt-16">
+          <section className="px-6 pt-14 sm:px-8 sm:pt-16">
             <p className="eyebrow">Quick checks</p>
-            <div className="mt-3 flex items-end justify-between gap-6">
-              <h2 className="font-poster text-6xl leading-none font-normal text-coal">
+            <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+              <h2 className="font-poster text-5xl leading-none font-normal text-coal sm:text-6xl">
                 {passed} of {result.checks.length} <span className="text-good-text">passed</span>
               </h2>
-              <div className="mb-2 h-3 w-48 overflow-hidden rounded-full bg-tray shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]">
+              <div className="h-3 w-full overflow-hidden rounded-full sm:mb-2 sm:w-48 bg-tray shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]">
                 <motion.div
                   className="h-full rounded-full bg-gradient-to-r from-[#4BE07F] to-[#17A94A]"
                   initial={{ width: 0 }}
@@ -158,20 +158,20 @@ export function Results({
                 />
               </div>
             </div>
-            <ul className="mt-8 grid grid-cols-2 gap-x-10 border-t-2 border-coal">
+            <ul className="mt-8 grid border-t-2 border-coal sm:grid-cols-2 sm:gap-x-10">
               {result.checks.map((c) => (
                 <li key={c.id} className="flex items-start gap-3 border-b border-black/10 py-4">
                   <span className="mt-0.5" aria-label={c.pass ? "Pass" : "Could improve"}>
                     <CheckBadge pass={c.pass} size="sm" />
                   </span>
-                  <span className="text-lg leading-snug text-coal">{c.message}</span>
+                  <span className="text-base leading-snug text-coal sm:text-lg">{c.message}</span>
                 </li>
               ))}
             </ul>
           </section>
         )}
 
-        <p className="px-8 pt-10 text-base text-stone">
+        <p className="px-6 pt-10 text-base text-stone sm:px-8">
           Scores out of 100 from Google&rsquo;s Lighthouse mobile test. 90+ is good, 50–89 needs improvement, under 50 is poor.
         </p>
       </div>

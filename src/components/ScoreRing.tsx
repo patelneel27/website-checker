@@ -37,7 +37,7 @@ export function ScoreRing({
 
   return (
     <div className="flex flex-col items-center text-center">
-      <div className="relative" style={{ width: SIZE, height: SIZE }}>
+      <div className="relative max-sm:[zoom:0.82]" style={{ width: SIZE, height: SIZE }}>
         <svg width={SIZE} height={SIZE} className="-rotate-90">
           <circle cx={SIZE / 2} cy={SIZE / 2} r={R} fill="none" stroke="#ECEEF2" strokeWidth={STROKE} />
           {colours && (
@@ -84,11 +84,11 @@ export function ScoreRing({
           )}
         </div>
       </div>
-      <p className="mt-4 font-display text-xl font-bold text-coal">{label}</p>
-      <p className="mt-0.5 text-base font-semibold" style={{ color: colours?.text ?? "#6B7596" }}>
+      <p className="mt-3 font-display text-lg leading-tight font-bold text-coal sm:mt-4 sm:text-xl">{label}</p>
+      <p className="mt-0.5 text-sm font-semibold sm:text-base" style={{ color: colours?.text ?? "#6B7596" }}>
         {band ? BAND_LABELS[band] : pending ? "Results on the way" : "Not measured"}
       </p>
-      <p className="mt-1 max-w-[15rem] text-base leading-snug text-stone">{meaning}</p>
+      <p className="mt-1 max-w-[15rem] text-sm leading-snug text-stone sm:text-base">{meaning}</p>
     </div>
   );
 }

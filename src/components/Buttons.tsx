@@ -39,7 +39,7 @@ export function TactileButton({ children, className = "", ...rest }: TactileProp
     </>
   );
   const cls =
-    "tactile relative flex h-[5.5rem] w-full items-center justify-center overflow-hidden rounded-[1.2rem] bg-gradient-to-b from-[#2E313A] to-[#15171D] text-2xl font-bold text-white";
+    "tactile relative flex h-[5.5rem] w-full items-center justify-center overflow-hidden rounded-[1.2rem] bg-gradient-to-b from-[#2E313A] to-[#15171D] px-12 text-center text-xl leading-tight font-bold text-white sm:text-2xl";
 
   return (
     <div className={`rounded-[1.6rem] border border-black/5 bg-tray p-2 shadow-[inset_0_2px_4px_rgba(0,0,0,0.08)] ${className}`}>

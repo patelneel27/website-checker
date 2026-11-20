@@ -23,7 +23,7 @@ export function ThankYou({
   const first = name.trim().split(/\s+/)[0];
 
   return (
-    <div className="paper flex h-full flex-col overflow-y-auto px-8 py-9">
+    <div className="paper flex h-full flex-col overflow-y-auto px-6 py-7 sm:px-8 sm:py-9">
       <header className="flex items-center justify-between gap-4">
         <Logo onLongPress={onLongPressLogo} />
         <PillButton icon="check" onClick={onDone}>
@@ -31,12 +31,12 @@ export function ThankYou({
         </PillButton>
       </header>
 
-      <div className="relative mt-16">
+      <div className="relative mt-12 sm:mt-16">
         <motion.div
           initial={{ scale: 0, rotate: -40 }}
           animate={{ scale: 1, rotate: -8 }}
           transition={{ type: "spring", stiffness: 240, damping: 14, delay: 0.1 }}
-          className="absolute top-2 right-4"
+          className="absolute top-0 right-0 max-sm:[zoom:0.7] sm:top-2 sm:right-4"
           aria-hidden="true"
         >
           <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}>
@@ -45,7 +45,7 @@ export function ThankYou({
         </motion.div>
 
         <p className="eyebrow">Report sent</p>
-        <h1 className="mt-4 font-poster text-[7.5rem] leading-[0.88] font-normal text-coal">
+        <h1 className="mt-4 font-poster text-[clamp(4rem,16vw,7.5rem)] leading-[0.88] font-normal text-coal">
           <motion.span className="block" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             Thank you{first ? "," : ""}
           </motion.span>
@@ -60,7 +60,7 @@ export function ThankYou({
             </motion.span>
           )}
         </h1>
-        <p className="mt-7 max-w-2xl text-2xl leading-snug text-stone">
+        <p className="mt-6 max-w-2xl text-lg leading-snug text-stone sm:mt-7 sm:text-2xl">
           Your report is on its way to <strong className="break-all text-coal">{email}</strong>. Check your junk folder if it
           isn&rsquo;t there in a few minutes.
         </p>
@@ -68,12 +68,12 @@ export function ThankYou({
 
       <section className="mt-auto pt-14">
         <p className="eyebrow">Next step</p>
-        <h2 className="mt-3 font-poster text-6xl leading-none font-normal text-coal">
+        <h2 className="mt-3 font-poster text-5xl leading-none font-normal text-coal sm:text-6xl">
           Book a free <span className="text-brand">strategy call</span>
         </h2>
-        <div className="mt-8 grid grid-cols-[auto_1fr] items-center gap-10">
+        <div className="mt-8 grid items-center gap-8 sm:grid-cols-[auto_1fr] sm:gap-10">
           <motion.div
-            className="glossy rounded-[1.8rem] bg-white p-5"
+            className="glossy justify-self-center rounded-[1.8rem] bg-white p-5"
             initial={{ opacity: 0, y: 30, rotate: 6 }}
             animate={{ opacity: 1, y: 0, rotate: -3 }}
             transition={{ type: "spring", stiffness: 180, damping: 16, delay: 0.35 }}
@@ -81,7 +81,7 @@ export function ThankYou({
             <QRCodeSVG value={bookingQrUrl} size={190} fgColor="#16181D" level="M" marginSize={0} />
             <p className="mt-3 text-center text-sm font-bold tracking-[0.12em] text-stone uppercase">Scan with your phone</p>
           </motion.div>
-          <ul className="space-y-4 text-xl text-coal">
+          <ul className="space-y-4 text-lg text-coal sm:text-xl">
             {["30 minutes with a Sterlixit specialist", "We walk through your report together", "No obligation, no hard sell"].map((t) => (
               <li key={t} className="flex items-center gap-3">
                 <CheckBadge size="sm" />

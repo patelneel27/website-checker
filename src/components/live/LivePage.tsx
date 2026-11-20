@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { getHome, isKioskDevice } from "@/lib/kiosk-device";
 import { CheckBadge, PillButton, TactileButton } from "../Buttons";
 import { IdleGuard } from "../IdleGuard";
@@ -46,22 +46,44 @@ function useClock() {
   return now;
 }
 
+/** The width the display's screens are drawn for. Narrower screens get a scaled-down copy. */
+const DESIGN_W = 600;
+const DESIGN_H = (DESIGN_W - 20) * (10 / 16) + 20;
+
 /** The smart-display frame: dark bezel, live clock, the given contents. */
 export function DisplayFrame({ place, wallpaper, children, compact = false }: { place: string; wallpaper: string; children: React.ReactNode; compact?: boolean }) {
   const now = useClock();
+  const outer = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const el = outer.current;
+    if (!el) return;
+    setWidth(el.getBoundingClientRect().width);
+    const ro = new ResizeObserver(([e]) => setWidth(e.contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  // On a phone the screens keep their tablet layout and shrink as one piece, like a device photo.
+  const scale = width !== null && width < DESIGN_W ? width / DESIGN_W : 1;
+
   return (
-    <div className="rounded-[2rem] bg-gradient-to-b from-[#2B2F3B] to-[#0F1119] p-2.5 shadow-[0_40px_60px_-30px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.15)]">
-      <div className={`relative overflow-hidden rounded-[1.5rem] text-white ${wallpaper} ${compact ? "aspect-[16/10] p-4" : "aspect-[16/10] p-5"}`}>
-        <div className="flex items-start justify-between">
-          <p className="text-sm font-semibold text-white/60">{place}</p>
-          <div className="text-right leading-none">
-            <p className="font-display text-2xl font-extrabold tabular-nums">{now}</p>
-            <p className="mt-1 flex items-center justify-end gap-1.5 text-[11px] font-bold tracking-[0.12em] text-[#5CE58F] uppercase">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-[#5CE58F]" /> Live
-            </p>
+    <div ref={outer} style={scale < 1 ? { height: DESIGN_H * scale } : undefined}>
+      <div
+        className="rounded-[2rem] bg-gradient-to-b from-[#2B2F3B] to-[#0F1119] p-2.5 shadow-[0_40px_60px_-30px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.15)]"
+        style={scale < 1 ? { width: DESIGN_W, transform: `scale(${scale})`, transformOrigin: "top left" } : undefined}
+      >
+        <div className={`relative overflow-hidden rounded-[1.5rem] text-white ${wallpaper} ${compact ? "aspect-[16/10] p-4" : "aspect-[16/10] p-5"}`}>
+          <div className="flex items-start justify-between">
+            <p className="text-sm font-semibold text-white/60">{place}</p>
+            <div className="text-right leading-none">
+              <p className="font-display text-2xl font-extrabold tabular-nums">{now}</p>
+              <p className="mt-1 flex items-center justify-end gap-1.5 text-[11px] font-bold tracking-[0.12em] text-[#5CE58F] uppercase">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[#5CE58F]" /> Live
+              </p>
+            </div>
           </div>
+          <div className="absolute inset-x-5 top-[4.6rem] bottom-5">{children}</div>
         </div>
-        <div className="absolute inset-x-5 top-[4.6rem] bottom-5">{children}</div>
       </div>
     </div>
   );
@@ -119,12 +141,12 @@ export function LivePage(p: LivePageProps) {
               <span className="rounded-full bg-coal px-3.5 py-1.5 text-sm font-extrabold tracking-[0.12em] text-white uppercase">Coming soon</span>
               <span className="rounded-full bg-brand/12 px-3.5 py-1.5 text-sm font-bold text-brand">Only for {p.product} customers</span>
             </div>
-            <h1 className="mt-5 font-poster text-[clamp(4.25rem,14vw,8rem)] leading-[0.9] font-normal text-coal">
+            <h1 className="mt-5 font-poster text-[clamp(3.5rem,14vw,8rem)] leading-[0.9] font-normal text-coal">
               <LetterRise text={p.hero.title} />
               <br />
               <WaveWord text={p.hero.word} tone={p.tone} autoAt={1.2} repeatEvery={10} />
             </h1>
-            <p className="mt-5 max-w-2xl text-2xl leading-snug text-stone">{p.hero.text}</p>
+            <p className="mt-5 max-w-2xl text-xl leading-snug text-stone sm:text-2xl">{p.hero.text}</p>
 
             <motion.div
               className="mx-auto mt-10 max-w-[44rem]"
@@ -174,7 +196,7 @@ export function LivePage(p: LivePageProps) {
 
             <div className="mx-auto max-w-[44rem] px-6 sm:px-8">
               {p.steps.map((s, i) => (
-                <div key={s.id} data-step={s.id} className="flex min-h-[48vh] items-center py-10">
+                <div key={s.id} data-step={s.id} className="flex min-h-[48vh] items-center py-8 sm:py-10">
                   <motion.div
                     animate={{ opacity: active === s.id ? 1 : 0.28, x: active === s.id ? 0 : -8 }}
                     transition={{ duration: 0.35 }}
@@ -183,8 +205,8 @@ export function LivePage(p: LivePageProps) {
                       <span className="font-poster text-4xl text-brand">0{i + 1}</span>
                       <span className="eyebrow">{s.eyebrow}</span>
                     </p>
-                    <h2 className="mt-3 font-poster text-[clamp(2.75rem,8vw,4.25rem)] leading-[0.95] font-normal text-coal">{s.title}</h2>
-                    <p className="mt-3 max-w-xl text-xl leading-snug text-stone">{s.text}</p>
+                    <h2 className="mt-3 font-poster text-[clamp(2.5rem,8vw,4.25rem)] leading-[0.95] font-normal text-coal">{s.title}</h2>
+                    <p className="mt-3 max-w-xl text-lg leading-snug text-stone sm:text-xl">{s.text}</p>
                   </motion.div>
                 </div>
               ))}
@@ -202,8 +224,8 @@ export function LivePage(p: LivePageProps) {
                 <motion.div
                   key={d.name}
                   className="glossy flex items-center gap-5 rounded-[1.8rem] bg-gradient-to-b from-white to-[#F5F6F8] p-5"
-                  initial={{ opacity: 0, x: i % 2 ? 40 : -40 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 36, rotate: i % 2 ? 1.5 : -1.5 }}
+                  whileInView={{ opacity: 1, y: 0, rotate: 0 }}
                   viewport={{ once: true, amount: 0.4, root: scroller }}
                   transition={{ type: "spring", stiffness: 160, damping: 20, delay: (i % 2) * 0.1 }}
                 >

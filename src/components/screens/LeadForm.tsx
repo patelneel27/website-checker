@@ -50,7 +50,7 @@ export function LeadForm({
   return (
     <div className="paper flex h-full flex-col">
       <form
-        className="flex-1 overflow-y-auto px-8 pt-9 pb-12"
+        className="flex-1 overflow-y-auto px-6 pt-7 pb-12 sm:px-8 sm:pt-9"
         autoComplete="off"
         noValidate
         onSubmit={(e) => {
@@ -59,21 +59,21 @@ export function LeadForm({
           if (canSubmit) onSubmit(data);
         }}
       >
-        <header className="flex items-center justify-between">
+        <header className="flex items-center justify-between gap-3">
           <Logo onLongPress={onLongPressLogo} />
           <PillButton icon="back" onClick={onBack}>
             Back to results
           </PillButton>
         </header>
 
-        <div className="mx-auto mt-12 max-w-3xl">
+        <div className="mx-auto mt-10 max-w-3xl sm:mt-12">
           <p className="eyebrow">Step 3 of 3 · Your full report</p>
-          <h1 className="mt-4 font-poster text-[6.5rem] leading-[0.9] font-normal text-coal">
+          <h1 className="mt-4 font-poster text-[clamp(3.5rem,14vw,6.5rem)] leading-[0.9] font-normal text-coal">
             Where should we
             <br />
             <span className="text-brand">send it?</span>
           </h1>
-          <p className="mt-6 text-xl leading-snug text-stone">
+          <p className="mt-5 text-lg leading-snug text-stone sm:mt-6 sm:text-xl">
             We&rsquo;ll email the report for <strong className="text-coal">{site}</strong> with your top 3 fixes and how to sort
             them.
           </p>

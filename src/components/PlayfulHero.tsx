@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { forwardRef, useEffect, useState } from "react";
 import { TactileButton } from "./Buttons";
+import { ScaledStage } from "./ScaledStage";
 
 // Welcome hero: oversized condensed headline with glossy, website-themed objects floating
 // around and over it (Google result, share card, score, toggle, cursor, speed/search/lock).
@@ -308,9 +309,11 @@ function Heartbeat({ active }: { active: boolean }) {
 
 export const PlayfulHero = forwardRef<HTMLDivElement, { onStart: () => void }>(function PlayfulHero({ onStart }, ctaRef) {
   return (
-    <section className="relative px-8 pt-6 pb-10">
-      {/* Stage: headline with objects layered around and over it */}
-      <div className="relative mx-auto h-[31rem] max-w-[47rem]">
+    <section className="relative px-6 pt-6 pb-10 sm:px-8">
+      {/* Stage: headline with objects layered around and over it. Laid out for the kiosk
+          tablet and scaled down as one piece on phones, so nothing overflows or collides. */}
+      <ScaledStage width={752} height={496}>
+      <div className="relative h-full w-full">
         {/* Objects are decorative; the headline carries the meaning. */}
         <h1 className="relative z-10 font-poster text-[7.6rem] leading-[0.9] tracking-[-0.005em] text-[#16181D]">
           <motion.span
@@ -371,8 +374,9 @@ export const PlayfulHero = forwardRef<HTMLDivElement, { onStart: () => void }>(f
           <SearchTile />
         </Float>
       </div>
+      </ScaledStage>
 
-      <p className="mx-auto mt-10 max-w-xl text-center text-xl leading-relaxed text-[#4A4F5C]">
+      <p className="mx-auto mt-6 max-w-xl text-center text-lg leading-relaxed text-[#4A4F5C] sm:mt-10 sm:text-xl">
         A free 60-second check of your speed, SEO, social previews and security, using Google&rsquo;s own Lighthouse test,
         explained in plain English.
       </p>
@@ -382,7 +386,7 @@ export const PlayfulHero = forwardRef<HTMLDivElement, { onStart: () => void }>(f
         <TactileButton onClick={onStart}>Check my website</TactileButton>
       </div>
 
-      <ol className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-lg font-semibold text-[#4A4F5C]">
+      <ol className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-base font-semibold text-[#4A4F5C] sm:text-lg">
         {["Type in your website", "See your scores", "Get the full report by email"].map((step, i) => (
           <li key={step} className="flex items-center gap-2">
             <span className="font-poster text-xl text-brand">0{i + 1}</span>
