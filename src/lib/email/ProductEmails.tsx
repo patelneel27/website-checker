@@ -145,6 +145,8 @@ export type AccountEmailProps = Shared & {
   bookingUrl: string;
   /** e.g. "We'll walk through live attendance, weekly rota and leave using your own team's set-up." */
   demoLine: string;
+  /** e.g. "Try StaffMain free for 14 days, with full access and no card required." */
+  trialLine?: string;
 };
 
 export const accountSubject = (p: EmailProduct) => `Your ${p.name} account is ready`;
@@ -157,6 +159,7 @@ export function AccountEmail(p: AccountEmailProps) {
       </Heading>
       <Text style={P}>Hi {p.firstName},</Text>
       <Text style={P}>Your {p.product.name} account is set up. Create your password to get started:</Text>
+      {p.trialLine && <Text style={{ ...P, color: BRAND.navy, fontWeight: 700 }}>{p.trialLine}</Text>}
       <CtaButton href={p.signupUrl}>Create my password</CtaButton>
       <Text style={{ ...P, margin: "24px 0 16px" }}>Then pick a 30-minute slot for your live demo. {p.demoLine}</Text>
       <Link href={p.bookingUrl} style={{ color: BRAND.blue, fontWeight: 700, fontSize: 16 }}>
@@ -171,6 +174,7 @@ export function accountPlainText(p: AccountEmailProps) {
     `Hi ${p.firstName},`,
     "",
     `Your ${p.product.name} account is set up. Create your password here: ${p.signupUrl}`,
+    ...(p.trialLine ? [p.trialLine] : []),
     "",
     `Then pick a 30-minute slot for your live demo: ${p.bookingUrl}`,
     p.demoLine,

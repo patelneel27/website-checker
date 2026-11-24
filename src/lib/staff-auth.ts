@@ -2,10 +2,12 @@ import "server-only";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { config } from "./config";
 
-// Staff mode uses a signed, http-only cookie issued after a correct STAFF_PIN.
+// Staff mode uses a signed, http-only cookie issued after a correct STAFF_PIN. The panel asks for
+// the PIN every time it opens and signs out when it closes; the short expiry covers a tablet left
+// on the "quick enquiry" page.
 
 export const STAFF_COOKIE = "sterlix_staff";
-const SESSION_MS = 12 * 60 * 60 * 1000;
+const SESSION_MS = 30 * 60 * 1000;
 
 function sign(value: string) {
   return createHmac("sha256", `sterlix-staff:${config.staffPin}`).update(value).digest("base64url");

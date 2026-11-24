@@ -6,6 +6,27 @@ import { Logo } from "../Logo";
 import { FeatureIcon, type FeatureIconId } from "../staffmain/FeatureIcon";
 
 export type ResultCard = { id: string; title: string; text: string };
+export type TrialOffer = { title: string; points: readonly string[] };
+
+/** "14-day free trial · Full access · No card required" as a glossy ticket. */
+export function TrialBadge({ trial, className = "" }: { trial: TrialOffer; className?: string }) {
+  return (
+    <div className={`glossy flex flex-wrap items-center gap-x-4 gap-y-2 rounded-[1.6rem] bg-gradient-to-b from-white to-[#F3F5FA] px-5 py-4 ${className}`}>
+      <span className="rounded-full bg-gradient-to-b from-[#4BE07F] to-[#17A94A] px-3.5 py-1.5 text-sm font-extrabold tracking-[0.12em] text-white uppercase shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]">
+        Free
+      </span>
+      <span className="font-display text-xl font-extrabold tracking-tight text-coal sm:text-2xl">{trial.title}</span>
+      <span className="flex flex-wrap gap-x-4 gap-y-1">
+        {trial.points.map((p) => (
+          <span key={p} className="flex items-center gap-2 text-base font-semibold text-coal sm:text-lg">
+            <CheckBadge size="sm" />
+            {p}
+          </span>
+        ))}
+      </span>
+    </div>
+  );
+}
 
 /** The personal "what it would do for you" result, like the health check's scores. */
 export function Result({
@@ -17,6 +38,7 @@ export function Result({
   next,
   cta,
   again,
+  trial,
   onBook,
   onAgain,
   onRestart,
@@ -30,6 +52,7 @@ export function Result({
   next: readonly string[];
   cta: string;
   again: string;
+  trial?: TrialOffer;
   onBook: () => void;
   onAgain: () => void;
   onRestart: () => void;
@@ -91,6 +114,17 @@ export function Result({
               </motion.li>
             ))}
           </ul>
+        )}
+
+        {trial && (
+          <motion.div
+            className="mt-10 px-6 sm:px-8"
+            initial={{ opacity: 0, y: 20, rotate: -1 }}
+            animate={{ opacity: 1, y: 0, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 18, delay: 0.85 }}
+          >
+            <TrialBadge trial={trial} />
+          </motion.div>
         )}
 
         <section className="mt-14 px-6 sm:px-8">

@@ -75,6 +75,7 @@ export const config = {
    */
   zohoFields: {
     product: env("ZOHO_FIELD_PRODUCT"),
+    industry: env("ZOHO_FIELD_INDUSTRY"),
     employees: env("ZOHO_FIELD_EMPLOYEES"),
     sites: env("ZOHO_FIELD_SITES"),
     mostTime: env("ZOHO_FIELD_MOST_TIME"),

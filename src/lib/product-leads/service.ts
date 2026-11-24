@@ -37,6 +37,8 @@ export type ProductSpec<L extends AnyLead> = {
   thanksWording?: (lead: L) => ThanksWording;
   /** Line in the "account ready" email; omit for products without accounts. */
   demoLine?: (lead: L) => string;
+  /** Free-trial sentence for the "account ready" email, e.g. "Try it free for 14 days…". */
+  trialLine?: () => string;
   zoho: (lead: L) => { description: string; tags: string[]; fields: Record<string, unknown>; company: string; website?: string | null };
   /** Short lines shown under the lead in staff mode. */
   staffDetails: (lead: L) => string[];
@@ -105,7 +107,7 @@ export function createProductService<L extends AnyLead>(spec: ProductSpec<L>) {
     if (!lead || !spec.demoLine) return false;
     try {
       const { logo, props: base } = await shared(lead);
-      const props = { ...base, signupUrl, bookingUrl: spec.links().bookingEmail, demoLine: spec.demoLine(lead) };
+      const props = { ...base, signupUrl, bookingUrl: spec.links().bookingEmail, demoLine: spec.demoLine(lead), trialLine: spec.trialLine?.() };
       await send(lead.email as string, accountSubject(base.product), await render(AccountEmail(props)), accountPlainText(props), logo);
       await store.update(lead.id, { accountEmailSentAt: new Date() });
       return true;

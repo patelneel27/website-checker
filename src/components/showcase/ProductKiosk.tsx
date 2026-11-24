@@ -11,7 +11,7 @@ import { StaffPanel, type StaffTab } from "../StaffPanel";
 import { About, type Answers, type Question } from "./About";
 import { DemoForm, emptyDemoForm, type ChipGroup, type DemoFormCopy, type DemoFormData } from "./DemoForm";
 import type { ShowcaseFeature } from "./FeatureScreen";
-import { Result, type ResultCard } from "./Result";
+import { Result, type ResultCard, type TrialOffer } from "./Result";
 import { Showcase } from "./Showcase";
 import { Thanks, type ThanksCopy } from "./Thanks";
 
@@ -42,6 +42,8 @@ export type ProductDef = {
   about: { eyebrow: string; headline: readonly string[]; subline: string; cta: string; neededHint: string; backLabel: string; questions: Question[] };
   result: (answers: Answers) => { headline: React.ReactNode; cards: ResultCard[]; extras: string[] };
   resultCopy: { eyebrow: string; nextTitle: string; next: readonly string[]; cta: string; again: string };
+  /** Optional free-trial offer, shown on the result screen. */
+  trial?: TrialOffer;
   form: { copy: DemoFormCopy; chipGroups: ChipGroup[] };
   thanks: ThanksCopy;
   /** Builds the API body (without clientId, capturedAt and consent). */
@@ -163,6 +165,7 @@ export function ProductKiosk({ def, config }: { def: ProductDef; config: Showcas
               <Result
                 {...def.resultCopy}
                 {...result}
+                trial={def.trial}
                 onBook={() => go("form")}
                 onAgain={() => {
                   setSlide({ index: 0, direction: -1 });

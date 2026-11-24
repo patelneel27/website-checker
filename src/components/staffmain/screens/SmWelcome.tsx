@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { AttractMode } from "../../AttractMode";
 import { QRCodeSVG } from "qrcode.react";
-import { LIVE, LIVE_EVENTS, LIVE_TILES, PRODUCT, WEBSITE_LABEL, WELCOME } from "@/config/staffmain";
+import { LIVE, LIVE_EVENTS, LIVE_TILES, PRODUCT, TRIAL, WEBSITE_LABEL, WELCOME } from "@/config/staffmain";
 import { CheckBadge, PillButton, TactileButton } from "../../Buttons";
 import { Logo } from "../../Logo";
 import { LetterRise } from "../../LetterRise";
@@ -177,6 +177,18 @@ export function SmWelcome({
 
         <div className="mx-auto mt-8 max-w-[34rem]">
           <TactileButton onClick={onStart}>{WELCOME.cta}</TactileButton>
+          <p className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-base font-semibold text-coal sm:text-lg">
+            <span className="flex items-center gap-2">
+              <CheckBadge size="sm" />
+              {TRIAL.title}
+            </span>
+            {TRIAL.points.map((p) => (
+              <span key={p} className="flex items-center gap-2">
+                <CheckBadge size="sm" />
+                {p}
+              </span>
+            ))}
+          </p>
           <LiveJump label={LIVE.jump} href="/staffmain/live" />
         </div>
 

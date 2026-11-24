@@ -5,6 +5,8 @@ import { getAttract, getHome, getKioskMode, HOMES, isKioskDevice, setAttract, se
 import { queuedLeadCount } from "@/lib/lead-queue";
 import { BAND_COLOURS, bandFor } from "@/lib/scores";
 import type { Scores } from "@/lib/types";
+import { PillButton } from "./Buttons";
+import { StaffmainGuide } from "./staffmain/StaffmainGuide";
 
 type TodayData = {
   zohoEnabled: boolean;
@@ -47,7 +49,7 @@ type ProductRow = {
   createdAt: string;
 };
 
-export type StaffTab = "leads" | "enquiry" | "staffmain" | "letflows" | "scans" | "device";
+export type StaffTab = "leads" | "enquiry" | "staffmain" | "letflows" | "guide" | "scans" | "device";
 type Tab = StaffTab;
 
 const time = (iso: string) => new Date(iso).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
@@ -64,11 +66,14 @@ export function StaffPanel({
   onClose: () => void;
   onResetKiosk: () => void;
 }) {
-  const [authed, setAuthed] = useState<boolean | null>(null);
+  // Always starts locked: the PIN is asked for every time staff mode opens.
+  const [authed, setAuthed] = useState(false);
   const [data, setData] = useState<TodayData | null>(null);
   const [tab, setTab] = useState<Tab>(initialTab);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  /** The StaffMain guide on its own, full screen, for a visitor to read. */
+  const [presenting, setPresenting] = useState(false);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/staff/today", { cache: "no-store" });
@@ -87,11 +92,6 @@ export function StaffPanel({
       delete document.body.dataset.staff;
     };
   }, []);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial fetch
-    void load();
-  }, [load]);
 
   async function resend(leadId: string) {
     setBusy(leadId);
@@ -131,9 +131,33 @@ export function StaffPanel({
     void load();
   }
 
+  /** Close and sign out, so the next long press asks for the PIN again. */
+  function close() {
+    void fetch("/api/staff/logout", { method: "POST", keepalive: true }).catch(() => {});
+    onClose();
+  }
+
   async function logoutAndReset() {
     await fetch("/api/staff/logout", { method: "POST" }).catch(() => {});
     onResetKiosk();
+  }
+
+  if (presenting) {
+    // Visitor view: only the guide. Closing signs out, so nobody can tap back into the leads.
+    return (
+      <div className="paper fixed inset-0 z-50 flex flex-col" role="dialog" aria-modal="true" aria-label="StaffMain guide">
+        <div className="flex-1 overflow-y-auto pb-28">
+          <StaffmainGuide large />
+        </div>
+        <div className="paper-bar">
+          <div className="mx-auto flex max-w-[34rem] justify-center">
+            <PillButton icon="close" onClick={close} className="w-full justify-center">
+              Close the guide
+            </PillButton>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -141,13 +165,12 @@ export function StaffPanel({
       <div className="mx-auto flex h-full w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b-2 border-line px-6 py-4">
           <h2 className="text-2xl font-extrabold">Staff mode</h2>
-          <button type="button" className="btn-secondary" onClick={onClose}>
+          <button type="button" className="btn-secondary" onClick={close}>
             Close
           </button>
         </div>
 
-        {authed === null && <p className="p-8 text-lg">Loading…</p>}
-        {authed === false && <PinPad onSuccess={load} />}
+        {!authed && <PinPad onSuccess={load} />}
 
         {authed && (
           <>
@@ -184,7 +207,7 @@ export function StaffPanel({
             )}
 
             <div className="flex flex-wrap gap-2 px-6 pt-4">
-              {(["leads", "enquiry", "staffmain", "letflows", "scans", "device"] as const).map((t) => (
+              {(["leads", "enquiry", "staffmain", "letflows", "guide", "scans", "device"] as const).map((t) => (
                 <button
                   key={t}
                   type="button"
@@ -195,9 +218,11 @@ export function StaffPanel({
                     ? `Health check (${data?.leads.length ?? 0})`
                     : isProductTab(t)
                       ? `${PRODUCT_TABS[t]} (${data?.products[t].leads.length ?? 0})`
-                      : t === "scans"
-                        ? `Scans (${data?.scans.length ?? 0})`
-                        : "This device"}
+                      : t === "guide"
+                        ? "StaffMain guide"
+                        : t === "scans"
+                          ? `Scans (${data?.scans.length ?? 0})`
+                          : "This device"}
                 </button>
               ))}
             </div>
@@ -259,6 +284,18 @@ export function StaffPanel({
                 ))}
 
               {tab === "device" && <DeviceSettings onNotice={setNotice} />}
+
+              {tab === "guide" && (
+                <>
+                  <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-mist px-5 py-4">
+                    <p className="text-base font-semibold text-navy">Turning the tablet round? Show the guide on its own, with no leads on screen.</p>
+                    <button type="button" className="btn-primary min-h-14 px-6 text-lg" onClick={() => setPresenting(true)}>
+                      Show to visitor
+                    </button>
+                  </div>
+                  <StaffmainGuide />
+                </>
+              )}
 
               {tab === "scans" &&
                 (data?.scans.length ? (

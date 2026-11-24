@@ -6,6 +6,29 @@ import type { LiveEvent, LiveTile } from "@/components/LiveDisplay";
 export const PRODUCT = "StaffMain";
 export const WEBSITE_LABEL = "staffmain.sterlixit.co.uk";
 
+// ---- Free trial and industries -----------------------------------------------------------------
+
+export const TRIAL = {
+  title: "14-day free trial",
+  points: ["Full access", "No card required"],
+  /** One sentence for screens and emails. */
+  line: "Try StaffMain free for 14 days, with full access and no card required.",
+};
+
+export const INDUSTRIES = ["Construction", "Restaurant", "Cafe", "Shop or store", "Hospitality", "Tuition", "Something else"] as const;
+export type Industry = (typeof INDUSTRIES)[number];
+
+/** Shown on the result screen: how StaffMain fits that kind of business. */
+export const INDUSTRY_LINES: Record<Industry, string | null> = {
+  Construction: "Staff clock in on site by NFC tag, QR code or location, with rules for each site.",
+  Restaurant: "Shift rotas, break hours and total hours, ready for payroll.",
+  Cafe: "Rotas for every shift, with breaks and hours tracked for you.",
+  "Shop or store": "Rotas and live attendance for every shop, with a view of each.",
+  Hospitality: "Shifts across every site, breaks tracked and payroll-ready hours.",
+  Tuition: "Set up for tuition: students, classes, class teachers and enrolments, in your own words.",
+  "Something else": null,
+};
+
 export const WELCOME = {
   headline: ["HR made", "simple."],
   subline: "People, leave, rota and attendance in one place.",
@@ -61,33 +84,32 @@ export const FEATURES: Feature[] = [
     id: "attendance",
     title: "Live attendance",
     benefit: "See who's in, right now, across every site.",
-    bullets: ["Clock in by QR, NFC, location or IP", "Live board for every location", "Late and missed clock-ins flagged"],
+    bullets: ["Clock in by QR code, NFC tag or location", "Rules and working hours for each location", "Every change logged: who, when and for whom"],
     media: { type: "image", src: "/staffmain/attendance.jpg", alt: "StaffMain attendance board with clock-in and clock-out times for each employee" },
   },
   {
     id: "rota",
     title: "Weekly rota",
     benefit: "Build the week's rota in minutes, not hours.",
-    bullets: ["Drag-and-drop shifts", "Copy last week in one tap", "Staff see their rota on their phone"],
+    bullets: ["Shift categories you set up yourself", "Staff see their rota on their phone", "Change history: see who changed what, and when"],
     media: { type: "image", src: "/staffmain/rota.jpg", alt: "StaffMain weekly rota with office, client site, WFH and holiday shifts" },
   },
   {
     id: "leave",
     title: "Leave & bank holidays",
     benefit: "Holiday requests approved in a tap.",
-    bullets: ["Entitlements worked out for you", "UK bank holidays built in", "Team calendar shows who's off"],
+    bullets: ["Your leave year and your own leave types", "Approve in a tap, with carry-over to next year", "Bank holidays for England & Wales, Scotland and NI, live from GOV.UK"],
     media: { type: "image", src: "/staffmain/leave.jpg", alt: "StaffMain leave requests with pending, approved and rejected requests" },
   },
   {
     id: "records",
-    title: "Employee records & documents",
-    benefit: "Every employee and document in one secure place.",
-    bullets: ["Personal and job details", "Contracts and documents stored securely", "Right-to-work checks with expiry reminders"],
+    title: "Staff records & right to work",
+    benefit: "Every person and document in one secure place.",
+    bullets: ["Right-to-work checks with reminders", "Documents, leave and sessions for each person", "Secure logins with two-factor (2FA)"],
     media: { type: "image", src: "/staffmain/records.jpg", alt: "StaffMain employee profile with employment details and documents tab" },
   },
-  // NOTE: no expenses module was found in the StaffMain code, so this slide still shows a drawn
-  // preview. Confirm the feature, or swap this slide for the real payroll report
-  // (/staffmain/payroll.jpg is ready).
+  // No screenshot of Expenses yet, so this slide shows a drawn preview. Add one to /public/staffmain/
+  // and set `media` to swap it in.
   {
     id: "expenses",
     title: "Expenses",
@@ -98,7 +120,7 @@ export const FEATURES: Feature[] = [
     id: "reports",
     title: "Reports & multi-company",
     benefit: "Clear reports, for one company or several.",
-    bullets: ["Hours, leave and attendance reports", "Several companies or branches in one account", "Export when you need it"],
+    bullets: ["Total hours and break hours", "Payroll-ready attendance reports", "Several companies or branches in one account"],
     media: { type: "image", src: "/staffmain/reports.jpg", alt: "StaffMain reports hub: employee, leave, rota, attendance, branch and payroll reports" },
   },
 ];
@@ -123,7 +145,8 @@ export type MostTime = (typeof MOST_TIME)[number];
 
 export const ABOUT = {
   headline: ["Tell us about", "your business."],
-  subline: "Three quick taps and we'll show how StaffMain would fit.",
+  subline: "A few quick taps and we'll show how StaffMain would fit.",
+  industry: "What kind of business are you?",
   employees: "How many employees?",
   sites: "How many sites or branches?",
   mostTime: "What takes the most time today?",
@@ -136,13 +159,13 @@ export const ABOUT = {
 export type ResultCardId = "rota" | "leave" | "attendance" | "rtw" | "expenses" | "records" | "reports";
 
 export const RESULT_CARDS: Record<ResultCardId, { title: string; text: string }> = {
-  rota: { title: "Weekly rota", text: "Build and share the rota in minutes; staff see it on their phone." },
-  leave: { title: "Leave", text: "Requests and approvals in one tap, with entitlements and bank holidays worked out for you." },
-  attendance: { title: "Live attendance", text: "See who's in across every site, with QR, NFC, location or IP clock-in." },
-  rtw: { title: "Right-to-work", text: "Documents stored securely, with reminders before anything expires." },
-  expenses: { title: "Expenses", text: "Receipts uploaded by staff, approved by managers, totals ready for payroll." },
-  records: { title: "Employee records", text: "Every person, contract and document in one secure place." },
-  reports: { title: "Reports", text: "Hours, leave and attendance reports in a click." },
+  rota: { title: "Weekly rota", text: "Build and share the rota in minutes, with a history of every change." },
+  leave: { title: "Leave", text: "Your own leave types, approvals in a tap, and UK bank holidays kept up to date." },
+  attendance: { title: "Live attendance", text: "See who's in across every site, with QR, NFC tag or location clock-in." },
+  rtw: { title: "Right to work", text: "Checks and documents stored securely, with reminders before anything expires." },
+  expenses: { title: "Expenses", text: "Expenses submitted, approved and tracked in one place." },
+  records: { title: "Staff records", text: "Every person, document and login in one secure place, with 2FA." },
+  reports: { title: "Reports", text: "Total hours, break hours and payroll-ready reports in a click." },
 };
 
 /** Which card each "most time" answer maps to. */
@@ -163,8 +186,8 @@ export const RESULT = {
   eyebrow: "Your StaffMain result",
   nextTitle: "What happens next",
   next: [
-    "Register for your free demo (one minute)",
-    "We set up a StaffMain account for your team",
+    "Register (it takes one minute)",
+    "Your 14-day free trial: full access, no card required",
     "A short live demo, built around how you work",
   ],
   multiSite: (sites: string) => `All ${sites} sites in one account, with a live view of each.`,
@@ -183,7 +206,7 @@ export type Timeframe = (typeof TIMEFRAMES)[number];
 export const FORM = {
   eyebrow: "Register for a demo",
   headline: ["Book your", "free demo."],
-  subline: "We'll set up a StaffMain account and a short live demo around how your team works.",
+  subline: "We'll set up your 14-day free trial (full access, no card required) and a short live demo around how your team works.",
   consent:
     "I'd like Sterlixit (Sterlix IT Ltd) to contact me about a StaffMain demo and send me related information. I can unsubscribe at any time.",
   submit: "Register for my demo",
@@ -193,7 +216,7 @@ export const FORM = {
 
 export const THANKS = {
   headline: ["You’re on", "the list."],
-  text: "We'll email you within 2 working days to set up your StaffMain demo.",
+  text: "We'll email you within 2 working days to set up your 14-day free trial and your StaffMain demo. Full access, no card required.",
   qrTitle: "Pick a time now",
   qrText: "Scan with your phone camera to book your demo straight away.",
   back: "Back to start",

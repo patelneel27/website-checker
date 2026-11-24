@@ -20,6 +20,23 @@ export function rateLimit(key: string, limit: number, windowMs: number): { ok: b
   return { ok: true, retryAfterS: 0 };
 }
 
+/**
+ * Counts failures only (e.g. wrong PINs), so correct attempts never use up the allowance. Blocked
+ * once `limit` failures fall inside the window; call `fail()` after each failed attempt.
+ */
+export function failureGate(key: string, limit: number, windowMs: number) {
+  const now = Date.now();
+  const hits = (buckets.get(key) ?? []).filter((t) => now - t < windowMs);
+  buckets.set(key, hits);
+  return {
+    blocked: hits.length >= limit,
+    fail() {
+      hits.push(Date.now());
+      buckets.set(key, hits);
+    },
+  };
+}
+
 export function clientIp(req: Request): string {
   const fwd = req.headers.get("x-forwarded-for");
   return fwd?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";

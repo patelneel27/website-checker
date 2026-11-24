@@ -5,7 +5,9 @@ export type FeatureIconId =
   // LetFlows
   | "tenancies" | "rent" | "owners" | "maintenance" | "compliance" | "mtd" | "listings" | "dashboard"
   // General enquiry services
-  | "web" | "branding" | "saas" | "marketing" | "mvp" | "ecommerce" | "support" | "software" | "other";
+  | "web" | "branding" | "saas" | "marketing" | "mvp" | "ecommerce" | "support" | "software" | "other"
+  // StaffMain guide
+  | "multisite" | "settings";
 
 const TILE: Record<FeatureIconId, { bg: string; stroke: string }> = {
   attendance: { bg: "bg-gradient-to-b from-[#4BE07F] to-[#17A94A]", stroke: "#FFFFFF" },
@@ -32,6 +34,8 @@ const TILE: Record<FeatureIconId, { bg: string; stroke: string }> = {
   support: { bg: "bg-gradient-to-b from-white to-[#ECEEF3] border border-white", stroke: "#1362FB" },
   software: { bg: "bg-gradient-to-b from-[#F0704A] to-[#C4431E]", stroke: "#FFFFFF" },
   other: { bg: "bg-gradient-to-b from-white to-[#ECEEF3] border border-white", stroke: "#16181D" },
+  multisite: { bg: "bg-gradient-to-b from-[#B78CFF] to-[#7A3FF0]", stroke: "#FFFFFF" },
+  settings: { bg: "bg-gradient-to-b from-[#2B2F3B] to-[#0F1119]", stroke: "#FFFFFF" },
 };
 
 const PATHS: Record<FeatureIconId, React.ReactNode> = {
@@ -151,6 +155,13 @@ const PATHS: Record<FeatureIconId, React.ReactNode> = {
     <>
       <path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.4A8.5 8.5 0 1 1 21 12Z" />
       <path d="M9.6 9.5a2.5 2.5 0 0 1 4.8.9c0 1.6-2.4 2.2-2.4 2.2M12 15.5h.01" />
+    </>
+  ),
+  multisite: <path d="M3 21h18M5 21V8l6-3v16M11 21V3l8 4v14M14 10h2M14 14h2M7.5 12h1M7.5 16h1" />,
+  settings: (
+    <>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
     </>
   ),
 };

@@ -6,13 +6,16 @@ import {
   EMPLOYEE_BANDS,
   FEATURES,
   FORM,
+  INDUSTRIES,
   MOST_TIME,
   PRODUCT,
   RESULT,
   SITE_BANDS,
   THANKS,
   TIMEFRAMES,
+  TRIAL,
   type EmployeeBand,
+  type Industry,
   type FeatureId,
   type MostTime,
   type SiteBand,
@@ -36,16 +39,17 @@ const STAFFMAIN: ProductDef = {
     headline: ABOUT.headline,
     subline: ABOUT.subline,
     cta: ABOUT.cta,
-    neededHint: "Choose your team size and number of sites first.",
+    neededHint: "Choose your type of business, team size and number of sites first.",
     backLabel: "Features",
     questions: [
+      { key: "industry", title: ABOUT.industry, options: INDUSTRIES, required: true },
       { key: "employees", title: ABOUT.employees, options: EMPLOYEE_BANDS, required: true },
       { key: "sites", title: ABOUT.sites, options: SITE_BANDS, required: true },
       { key: "mostTime", title: ABOUT.mostTime, hint: ABOUT.mostTimeHint, options: MOST_TIME, multi: true },
     ],
   },
   result: (a) => {
-    const r = buildResult(a.employees as EmployeeBand, a.sites as SiteBand, (a.mostTime as MostTime[]) ?? []);
+    const r = buildResult(a.employees as EmployeeBand, a.sites as SiteBand, (a.mostTime as MostTime[]) ?? [], a.industry as Industry | null);
     return {
       headline: (
         <>
@@ -54,13 +58,15 @@ const STAFFMAIN: ProductDef = {
         </>
       ),
       cards: r.cards,
-      extras: [r.multiSite && RESULT.multiSite(a.sites as string), r.bigTeam && RESULT.bigTeam].filter(Boolean) as string[],
+      extras: [r.industryLine, r.multiSite && RESULT.multiSite(a.sites as string), r.bigTeam && RESULT.bigTeam].filter(Boolean) as string[],
     };
   },
   resultCopy: RESULT,
+  trial: TRIAL,
   form: {
     copy: { ...FORM, emailLabel: "Work email", companyLabel: "Company", companyRequired: true, showJobTitle: true },
     chipGroups: [
+      { key: "industry", label: "Type of business", options: INDUSTRIES, required: true },
       { key: "employees", label: "Number of employees", options: EMPLOYEE_BANDS, required: true },
       { key: "sites", label: "Number of sites or branches", options: SITE_BANDS },
       { key: "currentSolution", label: "What do you use now?", options: CURRENT_SOLUTIONS },
@@ -75,6 +81,7 @@ const STAFFMAIN: ProductDef = {
     phone: f.phone.trim() || undefined,
     company: f.company.trim(),
     jobTitle: f.jobTitle.trim() || undefined,
+    industry: f.chips.industry ?? null,
     employees: f.chips.employees,
     sites: f.chips.sites ?? null,
     mostTime: a.mostTime ?? [],

@@ -3,12 +3,15 @@ import {
   CURRENT_SOLUTIONS,
   DEFAULT_CARDS,
   EMPLOYEE_BANDS,
+  INDUSTRIES,
+  INDUSTRY_LINES,
   MOST_TIME,
   MOST_TIME_TO_CARD,
   RESULT_CARDS,
   SITE_BANDS,
   TIMEFRAMES,
   type EmployeeBand,
+  type Industry,
   type MostTime,
   type ResultCardId,
   type SiteBand,
@@ -35,6 +38,8 @@ export const StaffmainLeadSchema = z.object({
   phone: optionalText(40),
   company: z.string().trim().min(1, "Please tell us your company name.").max(160),
   jobTitle: optionalText(120),
+  // Optional on the server so a lead queued offline by an older kiosk version still saves.
+  industry: z.enum(INDUSTRIES).nullable().default(null),
   employees: z.enum(EMPLOYEE_BANDS, "Please choose how many employees you have."),
   sites: z.enum(SITE_BANDS).nullable().default(null),
   mostTime: z.array(z.enum(MOST_TIME)).max(MOST_TIME.length).default([]),
@@ -50,7 +55,7 @@ export type StaffmainLeadData = z.output<typeof StaffmainLeadSchema>;
 export const sitesLabel = (sites: SiteBand) => `${sites} site${sites === "1" ? "" : "s"}`;
 
 /** The personal result for screen 4 (and the account email). */
-export function buildResult(employees: EmployeeBand, sites: SiteBand, mostTime: MostTime[]) {
+export function buildResult(employees: EmployeeBand, sites: SiteBand, mostTime: MostTime[], industry?: Industry | null) {
   const ids: ResultCardId[] = [];
   // Keep the order the options are listed in, so the result is stable.
   for (const option of Object.keys(MOST_TIME_TO_CARD) as MostTime[]) {
@@ -61,7 +66,8 @@ export function buildResult(employees: EmployeeBand, sites: SiteBand, mostTime: 
 
   const multiSite = sites !== "1";
   const bigTeam = employees === "51–200" || employees === "201–500" || employees === "500+";
-  return { cards, multiSite, bigTeam, employeesLabel: `${employees} staff`, sitesLabel: sitesLabel(sites) };
+  const industryLine = industry ? INDUSTRY_LINES[industry] : null;
+  return { cards, multiSite, bigTeam, industryLine, employeesLabel: `${employees} staff`, sitesLabel: sitesLabel(sites) };
 }
 
 /** "rotas, holiday requests and expenses" */

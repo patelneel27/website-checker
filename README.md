@@ -6,7 +6,7 @@ Kiosk web app for the Sterlixit stand: one link for the whole team.
 |---|---|
 | `/` | **Event home.** Pick a demo. Long-press the logo for staff mode. |
 | `/health-check` | **Website Health Check.** A visitor enters their website, sees four Lighthouse scores, three quick wins and our own checks, then gets the full report by email. Spec: `5 - Website Health Check Build Plan.md`. |
-| `/staffmain` | **StaffMain showcase.** Six feature screens, three quick questions, a personal result, then a demo request. Works on its own from a QR code on a phone. Spec: `6 - Staffmain Showcase & Lead Capture Plan.md`. |
+| `/staffmain` | **StaffMain showcase.** Six feature screens, four quick questions (type of business, team size, sites, what takes the most time), a personal result with the **14-day free trial** (full access, no card required), then a demo request. Works on its own from a QR code on a phone. Spec: `6 - Staffmain Showcase & Lead Capture Plan.md`. |
 | `/enquiry` | **General Enquiry.** Services picker, details form, thank-you. The catch-all: if in doubt, use this. Staff mode → **+ Quick enquiry** opens the form directly and tags the lead "Team member" (only trusted from a staff-signed-in device). Spec: `8 - General Enquiry Plan.md`; copy in `src/config/enquiry.ts`. |
 | `/letflows` | **LetFlows showcase.** Same flow for landlords and letting agents, in LetFlows' brick-orange accent. Spec: `7 - LetFlows Showcase & Lead Capture Plan.md`. |
 
@@ -86,9 +86,12 @@ See `.env.example`; every variable is described there. The important ones:
   (Lead Source `Stand – <EVENT_NAME>`, tags, website, scores and top fixes in the Description).
   If that email already exists in Zoho, the record isn't overwritten: the health check is added
   as a Note instead. If PageSpeed is still running, the email waits until it finishes.
-- **Staff mode:** long-press the logo for 1.5 s, then enter the PIN. It shows today's leads and
+- **Staff mode:** long-press the logo for 1.5 s, then enter the PIN. The PIN is asked for **every
+  time** staff mode opens, and closing it signs out. It shows today's leads and
   scans with their email and Zoho status, lets you re-send a report, retry the Zoho sync, export
   to CSV (today or all), warm up the demo scan and reset the kiosk.
+  The **StaffMain guide** tab lists every StaffMain feature (`src/config/staffmain-guide.ts`).
+  **Show to visitor** opens it full screen with no leads visible; closing it signs out.
 - **Kiosk:** after 90 s idle it shows "Still there?" for 10 s, then clears everything and goes
   back to Welcome. Form autofill is off so one visitor's details never show for the next.
 
